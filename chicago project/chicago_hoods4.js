@@ -15,11 +15,174 @@ L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
 var link = "https://data.cityofchicago.org/resource/igwz-8jzy.geojson"
 
 //Function that will determine the color of a Chicago neighborhood based on the area it belongs to
-function chooseColor(sec_neigh) {
-  switch (sec_neigh) {
-  
+function chooseColor(community) {
+  switch (community) {
+    // "Far North Side"
+    case "OHARE":
+      return "darkgreen";
+    case "EDISON PARK":
+      return "darkgreen";
+    case "NORWOOD PARK":
+      return "darkgreen";
+    case "JEFFERSON PARK":
+      return "darkgreen";
+    case "FOREST GLEN": 
+      return "darkgreen";
+    case "NORTH PARK":  
+      return "darkgreen";
+    case "ALBANY PARK":
+      return "darkgreen";
+    case "WEST RIDGE":  
+      return "darkgreen";
+    case "LINCOLN SQUARE":
+      return "darkgreen";
+    case "ROGERS PARK": 
+      return "darkgreen";
+    case "EDGEWATER":
+      return "darkgreen";
+    case "UPTOWN":
+      return "darkgreen";
+    // "North Side"
+    case "AVONDALE":
+      return "cyan";
+    case "LAKE VIEW":
+      return "cyan";
+    case "LINCOLN PARK":
+      return "cyan";
+    case "LOGAN SQUARE":
+      return "cyan";
+    case "NORTH CENTER": 
+      return "cyan";
+    // "Northwest Side"
+    case "BELMONT CRAGIN":
+      return "darkslateblue";
+    case "DUNNING":
+      return "darkslateblue";
+    case "HERMOSA":
+      return "darkslateblue";
+    case "IRVING PARK":
+      return "darkslateblue";
+    case "MONTCLARE": 
+      return "darkslateblue";
+    case "PORTAGE PARK":
+      return "darkslateblue";
+    //"West Side"
+    case "AUSTIN":
+      return "red";
+    case "HUMBOLDT PARK":
+      return "red";
+    case "WEST TOWN":
+      return "red";
+    case "WEST GARFIELD PARK":
+      return "red";
+    case "EAST GARFIELD PARK": 
+      return "red";
+    case "NEAR WEST SIDE":
+      return "red";
+    case "NORTH LAWNDALE":
+      return "red";
+    case "SOUTH LAWNDALE":
+      return "red";
+    case "LOWER WEST SIDE":
+      return "red"; 
+    // "Central"
+    case "NEAR NORTH SIDE":
+      return "fuchsia";
+    case "LOOP":
+      return "fuchsia";
+    case "NEAR SOUTH SIDE":
+      return "fuchsia";
+    // "Southwest Side"
+    case "GARFIELD RIDGE":
+        return "orange";
+    case "CLEARING":
+        return "darkorange";
+    case "ARCHER HEIGHTS":
+        return "darkorange";
+    case "WEST ELSDON":
+        return "darkorange";
+    case "WEST LAWN": 
+        return "darkorange";
+    case "BRIGHTON PARK":
+        return "darkorange";
+    case "GAGE PARK":
+        return "darkorange";
+    case "CHICAGO LAWN":
+        return "darkorange";
+    case "MCKINLEY PARK":
+        return "darkorange"; 
+    case "NEW CITY":
+        return "darkorange";
+    case "WEST ENGLEWOOD":
+        return "darkorange";
+    case "ENGLEWOOD":
+        return "darkorange"; 
+    // "South Side"
+    case "BRIDGEPORT":
+        return "yellow";
+    case "ARMOUR SQUARE":
+        return "yellow";
+    case "DOUGLAS":
+        return "yellow";
+    case "OAKLAND":
+        return "yellow";
+    case "GRAND BOULEVARD": 
+        return "yellow";
+    case "FULLER PARK":
+        return "yellow";
+    case "WASHINGTON PARK":
+        return "yellow";
+    case "HYDE PARK":
+        return "yellow";
+    case "WOODLAWN":
+        return "yellow"; 
+    case "GREATER GRAND CROSSING":
+        return "yellow";
+    case "SOUTH SHORE":
+        return "yellow";
+    case "KENWOOD":
+        return "yellow"; 
+    // "Far Southwest Side"
+    case "ASHBURN":
+        return "green";
+    case "AUBURN GRESHAM":
+        return "green";
+    case "BEVERLY":
+        return "green";
+    case "WASHINGTON HEIGHTS":
+        return "green";
+    case "MOUNT GREENWOOD": 
+        return "green";
+    case "MORGAN PARK":
+        return "green";
+    // "Far Southwest Side"
+    case "CHATHAM":
+        return "cadetblue";
+    case "AVALON PARK":
+        return "cadetblue";
+    case "SOUTH CHICAGO":
+        return "cadetblue";
+    case "CALUMET HEIGHTS":
+        return "cadetblue";
+    case "BURNSIDE": 
+        return "cadetblue";
+    case "ROSELAND":
+        return "cadetblue";
+    case "WEST PULLMAN":
+        return "cadetblue";
+    case "RIVERDALE":
+        return "cadetblue";
+    case "PULLMAN":
+        return "cadetblue"; 
+    case "SOUTH DEERING":
+        return "cadetblue";
+    case "EAST SIDE":
+        return "cadetblue";
+    case "HEGEWISCH":
+        return "cadetblue";
+
   default:
-    return "mediumseagreen";
+    return "grey";
   }
 }
 
@@ -35,7 +198,7 @@ d3.json(link, function(data) {
       return {
         color: "white",
         // Call the chooseColor function to decide which color to color our neighborhood (color based on borough)
-        fillColor: chooseColor(feature.properties.neighborhood),
+        fillColor: chooseColor(feature.properties.community),
         fillOpacity: 0.5,
         weight: 1.5
       };
@@ -65,7 +228,7 @@ d3.json(link, function(data) {
         }
       });
       // Giving each feature a pop-up with information pertinent to it
-      layer.bindPopup("<h1>" + feature.properties.community + "</h1> <hr> <h2>" + feature.properties.borough + "</h2>");
+      layer.bindPopup("<h1>" + feature.properties.community + "</h1> <hr> <h2>" + feature.properties.community + "</h2>");
 
     }
   }).addTo(map);
