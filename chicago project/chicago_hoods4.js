@@ -12,21 +12,21 @@ L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
   accessToken: API_KEY
 }).addTo(map);
 
-var link = "https://data.cityofchicago.org/resource/y6yq-dbs2.geojson"
+var link = "https://data.cityofchicago.org/resource/igwz-8jzy.geojson"
 
 //Function that will determine the color of a Chicago neighborhood based on the area it belongs to
 function chooseColor(sec_neigh) {
   switch (sec_neigh) {
   
   default:
-    return "royalblue";
+    return "mediumseagreen";
   }
 }
 
 // Grabbing our GeoJSON data..
 d3.json(link, function(data) {
 
-  console.log(data.features[0].properties.pri_neigh);
+  console.log(data.features[1].properties.community);
 
   // Creating a geoJSON layer with the retrieved data
   L.geoJson(data, {
@@ -35,7 +35,7 @@ d3.json(link, function(data) {
       return {
         color: "white",
         // Call the chooseColor function to decide which color to color our neighborhood (color based on borough)
-        fillColor: chooseColor(feature.properties.pri_neigh),
+        fillColor: chooseColor(feature.properties.neighborhood),
         fillOpacity: 0.5,
         weight: 1.5
       };
@@ -55,6 +55,7 @@ d3.json(link, function(data) {
         mouseout: function(event) {
           layer = event.target;
           layer.setStyle({
+            strokeweight: 2,
             fillOpacity: 0.5
           });
         },
@@ -64,7 +65,7 @@ d3.json(link, function(data) {
         }
       });
       // Giving each feature a pop-up with information pertinent to it
-      layer.bindPopup("<h1>" + feature.properties.pri_neigh + "</h1> <hr> <h2>" + feature.properties.borough + "</h2>");
+      layer.bindPopup("<h1>" + feature.properties.community + "</h1> <hr> <h2>" + feature.properties.borough + "</h2>");
 
     }
   }).addTo(map);
