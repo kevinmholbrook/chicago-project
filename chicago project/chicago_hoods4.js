@@ -1,17 +1,4 @@
-// Creating map object
-var map = L.map("map", {
-  center: [41.8781, -87.6298],
-  zoom: 11
-});
-
-// Adding tile layer
-L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
-  attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
-  maxZoom: 18,
-  id: "mapbox.streets",
-  accessToken: API_KEY
-}).addTo(map);
-
+// Set link
 var link = "https://data.cityofchicago.org/resource/igwz-8jzy.geojson"
 
 //Function that will determine the color of a Chicago neighborhood based on the area it belongs to
@@ -188,11 +175,16 @@ function chooseColor(community) {
 
 // Grabbing our GeoJSON data..
 d3.json(link, function(data) {
-
+  //Test print
   console.log(data.features[1].properties.community);
+  // Call createFeatures function defined below
+  createFeatures(data.features);
+});
 
-  // Creating a geoJSON layer with the retrieved data
-  L.geoJson(data, {
+// Define createFeatures function
+function createFeatures (neighborhoodData) {
+  // Define neighborhood layer
+  var neighborhoods = L.geoJson(neighborhoodData, {
     // Style each feature (in this case a neighborhood)
     style: function(feature) {
       return {
@@ -231,5 +223,51 @@ d3.json(link, function(data) {
       layer.bindPopup("<h1>" + feature.properties.community + "</h1> <hr> <h2>" + feature.properties.community + "</h2>");
 
     }
-  }).addTo(map);
-});
+  });
+  // Call createMap function defined below
+  createMap(neighborhoods);
+};
+
+//Define createMap function
+function createMap(neighborhoods) {
+
+  // Define streetmap and darkmap layers
+  var streetmap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
+    attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+    maxZoom: 18,
+    id: "mapbox.streets",
+    accessToken: API_KEY
+  });
+
+  var darkmap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
+    attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+    maxZoom: 18,
+    id: "mapbox.dark",
+    accessToken: API_KEY
+  });
+
+  // Define a baseMaps object to hold our base layers
+  var baseMaps = {
+    "Street Map": streetmap,
+    "Dark Map": darkmap
+  };
+
+  // Create overlay object to hold our overlay layer
+  var overlayMaps = {
+    Neighborhoods: neighborhoods
+  };
+
+  // Create our map, giving it the streetmap and neighborhood layers to display on load
+  var myMap = L.map("map", {
+    center: [41.8781, -87.6298],
+    zoom: 11,
+    layers: [streetmap, neighborhoods]
+  });
+
+  // Create a layer control
+  // Pass in our baseMaps and overlayMaps
+  // Add the layer control to the map
+  L.control.layers(baseMaps, overlayMaps, {
+    collapsed: false
+  }).addTo(myMap);
+}
