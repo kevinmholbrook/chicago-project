@@ -215,9 +215,10 @@ function createFeatures (neighborhoodData) {
           });
         },
         // When a feature (neighborhood) is clicked, it is enlarged to fit the screen
-        click: function(event) {
-          map.fitBounds(event.target.getBounds());
-        }
+        //FYI right now I can't get this feature to work tbd
+        // click: function(event) {
+        //   target.fitBounds(event.target.getBounds());
+        // }
       });
       // Giving each feature a pop-up with information pertinent to it
       layer.bindPopup("<h1>" + feature.properties.community + "</h1> <hr> <h2>" + feature.properties.community + "</h2>");
@@ -258,7 +259,7 @@ function createMap(neighborhoods) {
   };
 
   // Create our map, giving it the streetmap and neighborhood layers to display on load
-  var myMap = L.map("map", {
+  var map = L.map("map", {
     center: [41.8781, -87.6298],
     zoom: 11,
     layers: [streetmap, neighborhoods]
@@ -269,5 +270,5 @@ function createMap(neighborhoods) {
   // Add the layer control to the map
   L.control.layers(baseMaps, overlayMaps, {
     collapsed: false
-  }).addTo(myMap);
+  }).addTo(map);
 }
