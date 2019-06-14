@@ -1,7 +1,11 @@
 // Set link
 var link = "https://data.cityofchicago.org/resource/igwz-8jzy.geojson"
 
-
+var ghostIcon = L.icon({
+  iconUrl: "Images/ghost-icon5.png",
+  iconSize: [35,35],
+  iconAnchor: [20,20],
+});
 //Function that will determine the color of a Chicago neighborhood based on the area it belongs to
 function chooseColor(community) {
   switch (community) {
@@ -240,7 +244,7 @@ d3.csv("haunted.csv", function(error, hauntedData) {
     lat = data.Latitude;
     lng = data.Longitude;
     hauntedMarkers.push(
-      L.marker([lat, lng]).bindPopup("<h1>" + data.Address + "</h1> <hr> <h3>" + data.Blurb + "</h3>"));
+      L.marker([lat, lng], {icon: ghostIcon}).bindPopup("<h3>" + data.Blurb + "</h3>"));
   });
 });
 
