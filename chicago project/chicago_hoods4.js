@@ -1,6 +1,7 @@
 // Set link
 var link = "https://data.cityofchicago.org/resource/igwz-8jzy.geojson"
 
+
 //Function that will determine the color of a Chicago neighborhood based on the area it belongs to
 function chooseColor(community) {
   switch (community) {
@@ -217,17 +218,34 @@ function createFeatures (neighborhoodData) {
         // When a feature (neighborhood) is clicked, it is enlarged to fit the screen
         //FYI right now I can't get this feature to work tbd
         // click: function(event) {
-        //   target.fitBounds(event.target.getBounds());
+        //   map.fitBounds(event.target.getBounds());
         // }
       });
       // Giving each feature a pop-up with information pertinent to it
       layer.bindPopup("<h1>" + feature.properties.community + "</h1> <hr> <h2>" + feature.properties.community + "</h2>");
-
     }
   });
   // Call createMap function defined below
   createMap(neighborhoods);
 };
+
+var hauntedMarkers = [];
+d3.csv("haunted.csv", function(error, hauntedData) {
+  
+  if (error) return console.warn(error);
+
+  // Cast each hours value in tvData as a number using the unary + operator
+  hauntedData.forEach(function(data) {
+
+    lat = data.Latitude;
+    lng = data.Longitude;
+    hauntedMarkers.push(
+      L.marker([lat, lng]).bindPopup("<h1>" + data.Address + "</h1> <hr> <h3>" + data.Blurb + "</h3>"));
+  });
+});
+
+console.log(hauntedMarkers);
+
 
 //Define createMap function
 function createMap(neighborhoods) {
@@ -247,6 +265,8 @@ function createMap(neighborhoods) {
     accessToken: API_KEY
   });
 
+  var hauntedLayer = L.layerGroup(hauntedMarkers);
+
   // Define a baseMaps object to hold our base layers
   var baseMaps = {
     "Street Map": streetmap,
@@ -255,14 +275,15 @@ function createMap(neighborhoods) {
 
   // Create overlay object to hold our overlay layer
   var overlayMaps = {
-    Neighborhoods: neighborhoods
+    Neighborhoods: neighborhoods,
+    Ghosts: hauntedLayer
   };
 
   // Create our map, giving it the streetmap and neighborhood layers to display on load
-  var map = L.map("map", {
+  var myMap = L.map("map", {
     center: [41.8781, -87.6298],
     zoom: 11,
-    layers: [streetmap, neighborhoods]
+    layers: [streetmap, hauntedLayer]
   });
 
   // Create a layer control
@@ -270,5 +291,5 @@ function createMap(neighborhoods) {
   // Add the layer control to the map
   L.control.layers(baseMaps, overlayMaps, {
     collapsed: false
-  }).addTo(map);
+  }).addTo(myMap);
 }
