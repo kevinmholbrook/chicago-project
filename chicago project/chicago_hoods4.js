@@ -11,6 +11,12 @@ var CPLIcon = L.icon({
   iconSize: [35,35],
   iconAnchor: [20,20],
 });
+
+var redLightIcon = L.icon({
+  iconUrl: "Images/rotating_light.png",
+  iconSize: [30,30],
+  iconAnchor: [20,20]
+});
 //Function that will determine the color of a Chicago neighborhood based on the area it belongs to
 function chooseColor(community) {
   switch (community) {
@@ -264,7 +270,7 @@ d3.csv("red-light-camera-locations.csv", function (error, red) {
     lat = d.LATITUDE;
     lng = d.LONGITUDE;
     redMarkers.push(
-      L.marker([lat, lng]).bindPopup("<h3>" + d.INTERSECTION + "</h3>"))
+      L.marker([lat, lng], {icon: redLightIcon}).bindPopup("<h3>" + d.INTERSECTION + "</h3>"))
 
   });
 
