@@ -17,6 +17,13 @@ var redLightIcon = L.icon({
   iconSize: [30,30],
   iconAnchor: [20,20]
 });
+
+var pizzaIcon = L.icon({
+  iconUrl: "Images/pizzaIcon.png",
+  iconSize: [50,50],
+  iconAnchor: [20,20]
+});
+
 //Function that will determine the color of a Chicago neighborhood based on the area it belongs to
 function chooseColor(community) {
   switch (community) {
@@ -187,7 +194,7 @@ function chooseColor(community) {
   default:
     return "grey";
   }
-}
+};
 
 // Grabbing our GeoJSON data..
 d3.json(link, function(data) {
@@ -294,8 +301,22 @@ d3.csv("CPLdata1.csv", function(data) {
   });
 });
 
+var pizzaHeatArray = [];
+var pizzaClusterMarkers = L.markerClusterGroup();
+d3.csv("pizzaUpdate.csv", function(error, pizzaData) {
+  
+    if (error) return console.warn(error);
 
+  // Cast each hours value in tvData as a number using the unary + operator
+    pizzaData.forEach(function(data) {
 
+        var lat = data.Latitude;
+        var lng = data.Longitude;
+        // pizzaHeatArray.push([lat, lng]);
+        pizzaClusterMarkers.addLayer(L.marker([lat, lng], {icon: pizzaIcon})
+        .bindPopup("<h3 align = 'center'>" + data.Name + "</h3><h4 align = 'center'>" + data.Address + "</h4"));
+    });
+  });
 
 //Define createMap function
 function createMap(neighborhoods) {
@@ -318,6 +339,10 @@ function createMap(neighborhoods) {
   var hauntedLayer = L.layerGroup(hauntedMarkers);
   var redLayer = L.layerGroup(redMarkers);
   var CPLLayer = L.layerGroup(CPLMarkers);
+//   var pizzaHeat = L.heatLayer(pizzaHeatArray, {
+//     radius: 20,
+//     blur: 35
+// });
 
   // Define a baseMaps object to hold our base layers
   var baseMaps = {
@@ -330,7 +355,9 @@ function createMap(neighborhoods) {
     Neighborhoods: neighborhoods,
     Ghosts: hauntedLayer,
     Libraries: CPLLayer,
-    "Red Light Cameras": redLayer
+    "Red Light Cameras": redLayer,
+    // "Pizza heat": pizzaHeat,
+    Pizza: pizzaClusterMarkers
   };
 
   // Create our map, giving it the streetmap and neighborhood layers to display on load
