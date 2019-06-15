@@ -557,22 +557,38 @@ function createFeatures (neighborhoodData) {
   createMap(neighborhoods);
 };
 
-var hauntedMarkers = [];
-d3.csv("haunted.csv", function(error, hauntedData) {
+// var hauntedMarkers = [];
+// d3.csv("haunted.csv", function(error, hauntedData) {
   
+//   if (error) return console.warn(error);
+
+//   // Cast each hours value in tvData as a number using the unary + operator
+//   hauntedData.forEach(function(data) {
+
+//     lat = data.Latitude;
+//     lng = data.Longitude;
+//     hauntedMarkers.push(
+//       L.marker([lat, lng], {icon: ghostIcon}).bindPopup("<h3>" + data.Blurb + "</h3>"));
+//   });
+// });
+
+// console.log(hauntedMarkers);
+
+var redMarkers = [];
+d3.csv("red-light-camera-locations.csv", function (error, red) {
+
   if (error) return console.warn(error);
 
-  // Cast each hours value in tvData as a number using the unary + operator
-  hauntedData.forEach(function(data) {
+  red.forEach(function (d) {
+    lat = d.LATITUDE;
+    lng = d.LONGITUDE;
+    redMarkers.push(
+      L.marker([lat, lng]).bindPopup("<h3>" + d.INTERSECTION + "</h3>"))
 
-    lat = data.Latitude;
-    lng = data.Longitude;
-    hauntedMarkers.push(
-      L.marker([lat, lng], {icon: ghostIcon}).bindPopup("<h3>" + data.Blurb + "</h3>"));
   });
-});
 
-console.log(hauntedMarkers);
+});
+console.log(redMarkers);
 
 
 //Define createMap function
@@ -593,7 +609,8 @@ function createMap(neighborhoods) {
     accessToken: API_KEY
   });
 
-  var hauntedLayer = L.layerGroup(hauntedMarkers);
+//   var hauntedLayer = L.layerGroup(hauntedMarkers);
+  var redLayer = L.layerGroup(redMarkers);
 
   // Define a baseMaps object to hold our base layers
   var baseMaps = {
@@ -604,14 +621,15 @@ function createMap(neighborhoods) {
   // Create overlay object to hold our overlay layer
   var overlayMaps = {
     Neighborhoods: neighborhoods,
-    Ghosts: hauntedLayer
+    
+    redLights: redLayer
   };
 
   // Create our map, giving it the streetmap and neighborhood layers to display on load
   var myMap = L.map("map", {
     center: [41.8781, -87.6298],
     zoom: 11,
-    layers: [streetmap, hauntedLayer]
+    layers: [streetmap, redLayer]
   });
 
   // Create a layer control
