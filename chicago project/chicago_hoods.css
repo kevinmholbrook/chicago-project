@@ -3,6 +3,9 @@ body {
   margin: 0;
 }
 
+br {
+    line-height: 10px;
+ }
 #map,
 body,
 html {

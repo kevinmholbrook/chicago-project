@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // // Creating map object
 // var map = L.map("map", {
 //   center: [41.8781, -87.6298],
@@ -322,6 +323,8 @@
 //   }).addTo(myMap);
 // }
 
+=======
+>>>>>>> e0a839a57d10ea3e71f5e446e29174ab4a82c982
 // Set link
 var link = "https://data.cityofchicago.org/resource/igwz-8jzy.geojson"
 
@@ -330,6 +333,14 @@ var ghostIcon = L.icon({
   iconSize: [35,35],
   iconAnchor: [20,20],
 });
+<<<<<<< HEAD
+=======
+var CPLIcon = L.icon({
+  iconUrl: "Images/pin.png",
+  iconSize: [35,35],
+  iconAnchor: [20,20],
+});
+>>>>>>> e0a839a57d10ea3e71f5e446e29174ab4a82c982
 //Function that will determine the color of a Chicago neighborhood based on the area it belongs to
 function chooseColor(community) {
   switch (community) {
@@ -574,6 +585,28 @@ d3.csv("haunted.csv", function(error, hauntedData) {
 
 console.log(hauntedMarkers);
 
+<<<<<<< HEAD
+=======
+var CPLMarkers = [];
+// d3.csv('CPLdata1.csv', function(data) {
+// console.log(data)
+// })
+d3.csv("CPLdata1.csv", function(data) {
+  console.log(data);
+
+  // Cast each hours value in tvData as a number using the unary + operator
+  data.forEach(function(d) {
+
+    lat = d.Latitude;
+    lng = d.Longitude;
+    CPLMarkers.push(
+      L.marker([lat, lng], {icon: CPLIcon}).bindPopup("<h3 align = 'center'>" + d.Name + "</h3><h4 align = 'center'>" + d.Hours+ "<br></br>"+ d.Phone + "<br></br>"+ d.Address + "<br></br><a href="+ d.Website+" target = '_blank'>" +`Website`+"</a></h4>"));
+  });
+});
+
+
+
+>>>>>>> e0a839a57d10ea3e71f5e446e29174ab4a82c982
 
 //Define createMap function
 function createMap(neighborhoods) {
@@ -594,6 +627,10 @@ function createMap(neighborhoods) {
   });
 
   var hauntedLayer = L.layerGroup(hauntedMarkers);
+<<<<<<< HEAD
+=======
+  var CPLLayer = L.layerGroup(CPLMarkers);
+>>>>>>> e0a839a57d10ea3e71f5e446e29174ab4a82c982
 
   // Define a baseMaps object to hold our base layers
   var baseMaps = {
@@ -604,14 +641,23 @@ function createMap(neighborhoods) {
   // Create overlay object to hold our overlay layer
   var overlayMaps = {
     Neighborhoods: neighborhoods,
+<<<<<<< HEAD
     Ghosts: hauntedLayer
+=======
+    Ghosts: hauntedLayer,
+    Libraries: CPLLayer,
+>>>>>>> e0a839a57d10ea3e71f5e446e29174ab4a82c982
   };
 
   // Create our map, giving it the streetmap and neighborhood layers to display on load
   var myMap = L.map("map", {
     center: [41.8781, -87.6298],
     zoom: 11,
+<<<<<<< HEAD
     layers: [streetmap, hauntedLayer]
+=======
+    layers: [streetmap, hauntedLayer,CPLLayer]
+>>>>>>> e0a839a57d10ea3e71f5e446e29174ab4a82c982
   });
 
   // Create a layer control
