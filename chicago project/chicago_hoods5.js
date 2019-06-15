@@ -1,16 +1,7 @@
 // Set link
 var link = "https://data.cityofchicago.org/resource/igwz-8jzy.geojson"
 
-var ghostIcon = L.icon({
-  iconUrl: "Images/ghost-icon5.png",
-  iconSize: [35,35],
-  iconAnchor: [20,20],
-});
-var CPLIcon = L.icon({
-  iconUrl: "Images/pin.png",
-  iconSize: [35,35],
-  iconAnchor: [20,20],
-});
+
 //Function that will determine the color of a Chicago neighborhood based on the area it belongs to
 function chooseColor(community) {
   switch (community) {
@@ -237,7 +228,7 @@ function createFeatures (neighborhoodData) {
   // Call createMap function defined below
   createMap(neighborhoods);
 };
-
+//ghost Chicago
 var hauntedMarkers = [];
 d3.csv("haunted.csv", function(error, hauntedData) {
   
@@ -249,32 +240,23 @@ d3.csv("haunted.csv", function(error, hauntedData) {
     lat = data.Latitude;
     lng = data.Longitude;
     hauntedMarkers.push(
-      L.marker([lat, lng], {icon: ghostIcon}).bindPopup("<h3>" + data.Blurb + "</h3>"));
+      L.marker([lat, lng]).bindPopup("<h1>" + data.Address + "</h1> <hr> <h3>" + data.Blurb + "</h3>"));
   });
 });
-
 console.log(hauntedMarkers);
 
-var CPLMarkers = [];
-// d3.csv('CPLdata1.csv', function(data) {
-// console.log(data)
-// })
-d3.csv("CPLdata1.csv", function(data) {
-  console.log(data);
-
-  // Cast each hours value in tvData as a number using the unary + operator
-  data.forEach(function(d) {
-
-    lat = d.Latitude;
-    lng = d.Longitude;
-    CPLMarkers.push(
-      L.marker([lat, lng], {icon: CPLIcon}).bindPopup("<h3 align = 'center'>" + d.Name + "</h3><h4 align = 'center'>" + d.Hours+ "<br></br>"+ d.Phone + "<br></br>"+ d.Address + "<br></br><a href="+ d.Website+" target = '_blank'>" +`Website`+"</a></h4>"));
-  });
+var customLayer = L.geoJson(null, {
+  onEachFeature: function(feature, layer) {
+    layer.bindPopup(feature.properties.Title);
+  }
 });
-
-
-
-
+var CPLdata = omnivore.csv('CPLdata1.csv',null,customLayer)
+  .on('read',function(){
+      for (var key in customLayer._layers){
+        customLayer._layers[key].addTo(CPLdata);
+      }
+  })
+console.log(CPLLayer)
 //Define createMap function
 function createMap(neighborhoods) {
 
@@ -294,7 +276,7 @@ function createMap(neighborhoods) {
   });
 
   var hauntedLayer = L.layerGroup(hauntedMarkers);
-  var CPLLayer = L.layerGroup(CPLMarkers);
+  // var CPLLayer = L.layerGroup(CPL)
 
   // Define a baseMaps object to hold our base layers
   var baseMaps = {
@@ -306,7 +288,7 @@ function createMap(neighborhoods) {
   var overlayMaps = {
     Neighborhoods: neighborhoods,
     Ghosts: hauntedLayer,
-    Libraries: CPLLayer,
+    Libraries: CPLLayer
   };
 
   // Create our map, giving it the streetmap and neighborhood layers to display on load
