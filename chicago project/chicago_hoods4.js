@@ -24,6 +24,12 @@ var pizzaIcon = L.icon({
   iconAnchor: [20,20]
 });
 
+var tacoIcon = L.icon({
+  iconUrl: "Images/tacoIcon.png",
+  iconSize: [30,30],
+  iconAnchor: [20,20]
+});
+
 //Function that will determine the color of a Chicago neighborhood based on the area it belongs to
 function chooseColor(community) {
   switch (community) {
@@ -302,7 +308,20 @@ d3.csv("CPLdata1.csv", function(data) {
 });
 
 var pizzaHeatArray = [];
-var pizzaClusterMarkers = L.markerClusterGroup();
+var pizzaClusterMarkers = L.markerClusterGroup({
+  iconCreateFunction: function(cluster) {
+    var count = cluster.getChildCount();
+    console.log(count);
+    return L.divIcon({ 
+      className: 'my-div-icon',
+      html: `<div id = "pizzaContainer">
+                <img id ="tacoImage" src = "Images/pizzaIcon.png" style="width:100%;"/>
+                <p id ="tacoText">${count}</p>
+            </div>`
+    });
+  }
+});
+
 d3.csv("pizzaUpdate.csv", function(error, pizzaData) {
   
     if (error) return console.warn(error);
@@ -317,6 +336,35 @@ d3.csv("pizzaUpdate.csv", function(error, pizzaData) {
         .bindPopup("<h3 align = 'center'>" + data.Name + "</h3><h4 align = 'center'>" + data.Address + "</h4"));
     });
   });
+
+
+var mexicanHeatArray = [];
+var mexicanClusterMarkers = L.markerClusterGroup({
+  iconCreateFunction: function(cluster) {
+    var count = cluster.getChildCount();
+    console.log(count);
+    return L.divIcon({ 
+      className: 'my-div-icon',
+      html: `<div id = "tacoContainer">
+                <img id ="tacoImage" src = "Images/tacoIcon.png" style="width:100%;"/>
+                <p id ="tacoText">${count}</p>
+            </div>`
+    });
+  }
+});
+ d3.csv("mexicanUpdate.csv", function(error, mexicanData) {
+    
+    if (error) return console.warn(error);
+  
+    // Cast each hours value in tvData as a number using the unary + operator
+    mexicanData.forEach(function(data) {
+      var lat = data.Latitude;
+          var lng = data.Longitude;
+          // pizzaHeatArray.push([lat, lng]);
+          mexicanClusterMarkers.addLayer(L.marker([lat, lng], {icon: tacoIcon})
+          .bindPopup("<h3 align = 'center'>" + data.Name + "</h3><h4 align = 'center'>" + data.Address + "</h4"));
+      });
+    });
 
 //Define createMap function
 function createMap(neighborhoods) {
@@ -357,14 +405,15 @@ function createMap(neighborhoods) {
     Libraries: CPLLayer,
     "Red Light Cameras": redLayer,
     // "Pizza heat": pizzaHeat,
-    Pizza: pizzaClusterMarkers
+    Pizza: pizzaClusterMarkers,
+    Mexican: mexicanClusterMarkers
   };
 
   // Create our map, giving it the streetmap and neighborhood layers to display on load
   var myMap = L.map("map", {
     center: [41.8781, -87.6298],
     zoom: 11,
-    layers: [streetmap, neighborhoods]
+    layers: [streetmap, mexicanClusterMarkers]
   });
 
   // Create a layer control
