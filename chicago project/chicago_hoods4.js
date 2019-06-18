@@ -284,6 +284,26 @@ d3.csv("red-light-camera-locations.csv", function (error, red) {
 });
 console.log(redMarkers);
 
+
+
+var coffeeMarkers = [];
+d3.csv("coffeeUpdate.csv", function(error, coffeeData) {
+  
+  if (error) return console.warn(error);
+
+  // Cast each hours value in tvData as a number using the unary + operator
+  coffeeData.forEach(function(data) {
+
+    lat = data.Latitude;
+    lng = data.Longitude;
+    hauntedMarkers.push(
+      L.marker([lat, lng]).bindPopup("<h3>" + data.Name + "</h3>"));
+  });
+});
+
+
+
+
 var CPLMarkers = [];
 // d3.csv('CPLdata1.csv', function(data) {
 // console.log(data)
@@ -339,6 +359,8 @@ function createMap(neighborhoods) {
   var hauntedLayer = L.layerGroup(hauntedMarkers);
   var redLayer = L.layerGroup(redMarkers);
   var CPLLayer = L.layerGroup(CPLMarkers);
+  var coffeeLayer = L.layerGroup(coffeeMarkers);
+
 //   var pizzaHeat = L.heatLayer(pizzaHeatArray, {
 //     radius: 20,
 //     blur: 35
@@ -357,7 +379,8 @@ function createMap(neighborhoods) {
     Libraries: CPLLayer,
     "Red Light Cameras": redLayer,
     // "Pizza heat": pizzaHeat,
-    Pizza: pizzaClusterMarkers
+    Pizza: pizzaClusterMarkers,
+    Coffee: coffeeLayer
   };
 
   // Create our map, giving it the streetmap and neighborhood layers to display on load
