@@ -24,6 +24,12 @@ var pizzaIcon = L.icon({
   iconAnchor: [20,20]
 });
 
+var coffeeIcon = L.icon({
+  iconUrl: "Images/coffeeIcon.png",
+  iconSize: [50,50],
+  iconAnchor: [20,20]
+});
+
 //Function that will determine the color of a Chicago neighborhood based on the area it belongs to
 function chooseColor(community) {
   switch (community) {
@@ -296,8 +302,8 @@ d3.csv("coffeeUpdate.csv", function(error, coffeeData) {
 
     lat = data.Latitude;
     lng = data.Longitude;
-    hauntedMarkers.push(
-      L.marker([lat, lng]).bindPopup("<h3>" + data.Name + "</h3>"));
+    coffeeMarkers.push(
+      L.marker([lat, lng], {icon : coffeeIcon}).bindPopup("<h3>" + data.Name + "</h3>"));
   });
 });
 
